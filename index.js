@@ -51,10 +51,14 @@ app.get('/api/persons/:id', (request, response) => {
   app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (body.number === undefined) {
-      return response.status(400).json({error: 'content missing'})
+    if (body.number === undefined || body.name === undefined) {
+      return response.status(406).json({error: 'name or number is missing'})
     }
-    
+
+    if (persons.find(person => person.name === body.name)) {
+        return response.status(409).json({error: 'duplicate name'})
+    }
+
     const person = {
       name: body.name,
       number: body.number,
