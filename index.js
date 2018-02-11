@@ -33,7 +33,7 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(note => note.id === id)
+    const person = persons.find(person => person.id === id)
   
     if ( person ) {
       response.json(person)
@@ -41,6 +41,30 @@ app.get('/api/persons/:id', (request, response) => {
       response.status(404).end()
     }
   })
+
+  const generateId = () => {
+      min = Math.ceil(1)
+      max = Math.floor(1000000)
+    return Math.floor(Math.random() * (max -min +1)) + min
+  }
+  
+  app.post('/api/persons', (request, response) => {
+    const body = request.body
+  
+    if (body.number === undefined) {
+      return response.status(400).json({error: 'content missing'})
+    }
+    
+    const person = {
+      name: body.name,
+      number: body.number,
+      id: generateId()
+    }
+  
+    persons = persons.concat(person)
+  
+    response.json(person)
+  })  
 
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
