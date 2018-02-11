@@ -4,9 +4,14 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
 app.use(bodyParser.json())
-app.use(morgan('tiny', {
-    skip: function (req, res) { return res.statusCode < 400 }
-}))
+
+morgan.token('content', function showContent (req) {
+    return `{"name": "${req.body.name}", "number":"${req.body.number}"}`
+  })
+  
+
+app.use(morgan(':method :url :content :status - :response-time'))
+
 
 let persons = [
     {
@@ -31,8 +36,8 @@ let persons = [
     }
 ]
 
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/api/persons/', (request, response) => {
+    return response.status(200).json(persons)
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -81,7 +86,7 @@ app.get('/api/persons/:id', (request, response) => {
     response.status(204).end()
   })  
 
-app.get('/info', (req, res) => {
+app.get('/info', (request, response) => {
     res.header("Content-Type", "application/json; charset=utf-8");
     res.write(`puhelinluettelossa on ${persons.length} henkilön tiedot \n`)
     res.write(`${new Date()}`)
