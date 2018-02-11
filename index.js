@@ -2,14 +2,15 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
+app.use(express.static('build'))
+app.use(cors())
 app.use(bodyParser.json())
 
-morgan.token('content', function showContent (req) {
-    return `{"name": "${req.body.name}", "number":"${req.body.number}"}`
+morgan.token('content', function showContent (request) {
+    return `${JSON.stringify(request.body)}`
   })
-  
-
 app.use(morgan(':method :url :content :status - :response-time'))
 
 
@@ -59,7 +60,7 @@ app.get('/api/persons/:id', (request, response) => {
   
   app.post('/api/persons', (request, response) => {
     const body = request.body
-  
+
     if (body.number === undefined || body.name === undefined) {
       return response.status(406).json({error: 'name or number is missing'})
     }
