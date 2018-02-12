@@ -31,6 +31,7 @@ app.get('/api/persons', (request, response) => {
     })
     .catch(error => {
       console.log(error)
+      response.status(404).end()
     })
 })
 
@@ -42,6 +43,7 @@ app.get('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
       console.log(error)
+      response.status(404).end()
     })
   })
   
@@ -61,6 +63,7 @@ app.get('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
       console.log(error)
+      response.status(404).end()
     })    
   })  
 
@@ -72,6 +75,7 @@ app.get('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
       console.log(error)
+      response.status(404).end()
     })
   })  
 
