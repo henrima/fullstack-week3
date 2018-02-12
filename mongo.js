@@ -6,15 +6,11 @@ const url = process.env.MLAB_URI
 
 mongoose.connect(url)
 
-const Person = mongoose.model('Person', {
-  name: String,
-  number: String
-})
-
 const person = new Person({
   name: process.argv[2],
   number: process.argv[3]
 })
+
 if (person.name) {
     person
     .save()
@@ -33,3 +29,5 @@ if (person.name) {
         mongoose.connection.close()
     })
 }
+
+
