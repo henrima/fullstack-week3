@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const dotenv = require('dotenv')
-dotenv.config()
+const uniqueValidator = require('mongoose-unique-validator');
+
+if ( process.env.NODE_ENV !== 'production' ) {
+    require('dotenv').config()
+}
+
 
 const url = process.env.MLAB_URI
 
@@ -10,7 +14,8 @@ mongoose.connect(url)
 const personSchema = new Schema({  
     name: {
     type: String,
-    required: [true, 'Henkilöllä pitää olla nimi.']
+    required: [true, 'Henkilöllä pitää olla nimi.'],
+    unique: true
 },
     number: {
         type: String,
@@ -18,6 +23,7 @@ const personSchema = new Schema({
     }    
 })
 
+personSchema.plugin(uniqueValidator)
 const Person = mongoose.model('Person', personSchema)
 
 // personSchema.methods.format = function(person, cb) {

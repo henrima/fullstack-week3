@@ -49,7 +49,6 @@ app.get('/api/persons/:id', (request, response) => {
   
   app.post('/api/persons', (request, response) => {
     const body = request.body
-    console.log(body.number)
 
     const person = new Person({
       name: body.name,
@@ -63,7 +62,7 @@ app.get('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
       console.log(error)
-      response.status(404).end()
+      response.status(400).send("Käyttäjän lisääminen epäonnistui.")
     })    
   })  
 
