@@ -62,7 +62,7 @@ app.get('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
       console.log(error)
-      response.status(400).send("Käyttäjän lisääminen epäonnistui.")
+      response.status(400).send("Käyttäjän lisääminen epäonnistui")
     })    
   })  
 
