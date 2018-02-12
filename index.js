@@ -3,6 +3,18 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config()
+
+const url = process.env.MLAB_URI
+
+mongoose.connect(url)
+
+const Person = mongoose.model('Person', {
+  name: String,
+  number: String
+})
 
 app.use(express.static('build'))
 app.use(cors())
@@ -14,32 +26,23 @@ morgan.token('content', function showContent (request) {
 app.use(morgan(':method :url :content :status - :response-time'))
 
 
-let persons = [
-    {
-        name: "Arto Hellas",
-        number: "040-123456",
-        id: 1
-    },
-    {
-        name: "Arto Järvinen",
-        number: "040-123456",
-        id: 2
-    },
-    {
-        name: "Martti Tienari",
-        number: "040-123456",
-        id: 3
-    },
-    {
-        name: "Lea Kutvonen",
-        number: "040-123456",
-        id: 4
-    }
-]
+const formatPerson = (person) => {
+  return {
+    name: person.name,
+    number: person.number,
+    id: person._id
+  }
+}
 
-app.get('/api/persons/', (request, response) => {
-    return response.status(200).json(persons)
+app.get('/api/persons', (request, response) => {
+  Person
+    .find({})
+    .then(people => {
+      response.json(people.map(formatPerson))
+    })
 })
+  
+    // return response.status(200).json(persons)
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
