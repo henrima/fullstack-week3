@@ -30,8 +30,7 @@ app.get('/api/persons', (request, response) => {
       response.json(people.map(formatPerson))
     })
     .catch(error => {
-      console.log(error)
-      response.status(404).end()
+      response.status(404).send(error)
     })
 })
 
@@ -42,8 +41,7 @@ app.get('/api/persons/:id', (request, response) => {
       response.json(formatPerson(person))
     })
     .catch(error => {
-      console.log(error)
-      response.status(404).end()
+      response.status(404).send(error)
     })
   })
   
@@ -61,28 +59,28 @@ app.get('/api/persons/:id', (request, response) => {
       response.json(formatPerson(savedPerson))
     })
     .catch(error => {
-      console.log(error)
-      response.status(400).send("Käyttäjän lisääminen epäonnistui")
+      response.status(400).send("Käyttäjän lisääminen epäonnistui: ", error)
     })    
   })  
 
   app.delete('/api/persons/:id', (request, response) => {
     Person
     .findByIdAndRemove(request.params.id)
-    .then(person => {
-      response.status(204).send("Käyttäjä poistettu.");
-    })
+    .then(
+      response.status(204).send("Käyttäjä poistettu.")
+    )
     .catch(error => {
-      console.log(error)
-      response.status(404).end()
+      response.status(404).send(error)
     })
   })  
 
 app.get('/info', (request, response) => {
-    res.header("Content-Type", "application/json; charset=utf-8");
-    res.write(`puhelinluettelossa on ${persons.length} henkilön tiedot \n`)
-    res.write(`${new Date()}`)
-    res.end()
+  Person.collection.count().then(count => { 
+    response.header("Content-Type", "application/json; charset=utf-8")
+    response.write(`puhelinluettelossa on ${count} henkilön tiedot \n`)
+    response.write(`${new Date()}`)
+    response.end()
+  })
 })
 
 app.put('/api/persons', (request, response) => {
@@ -99,7 +97,6 @@ app.put('/api/persons', (request, response) => {
       response.json(updatedPerson)
     })
     .catch(error => {
-      console.log(error)
       response.status(400).send({ error: 'malformatted iidee' })
     })
 })

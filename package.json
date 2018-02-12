@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/henrima/fullstack-week3#readme",
   "devDependencies": {
+    "eslint": "^4.17.0",
     "nodemon": "^1.14.12"
   },
   "dependencies": {
