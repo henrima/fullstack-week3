@@ -29,6 +29,9 @@ app.get('/api/persons', (request, response) => {
     .then(people => {
       response.json(people.map(formatPerson))
     })
+    .catch(error => {
+      console.log(error)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -37,20 +40,14 @@ app.get('/api/persons/:id', (request, response) => {
     .then(person => {
       response.json(formatPerson(person))
     })
+    .catch(error => {
+      console.log(error)
+    })
   })
   
   app.post('/api/persons', (request, response) => {
     const body = request.body
     console.log(body.number)
-
-    // if (body.number === undefined || body.number === '' || body.name === undefined || body.name === '') {
-    //   return response.status(406).json({error: 'name or number is missing'})
-    // }
-
-
-    // if (persons.find(person => person.name === body.name)) {
-    //     return response.status(409).json({error: 'duplicate name'})
-    // }
 
     const person = new Person({
       name: body.name,
@@ -62,13 +59,20 @@ app.get('/api/persons/:id', (request, response) => {
     .then(savedPerson => {
       response.json(formatPerson(savedPerson))
     })
+    .catch(error => {
+      console.log(error)
+    })    
   })  
 
   app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-  
-    response.status(204).end()
+    Person
+    .findByIdAndRemove(request.params.id)
+    .then(person => {
+      response.status(200).send("Käyttäjä poistettu.");
+    })
+    .catch(error => {
+      console.log(error)
+    })
   })  
 
 app.get('/info', (request, response) => {
