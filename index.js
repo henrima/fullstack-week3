@@ -71,7 +71,7 @@ app.get('/api/persons/:id', (request, response) => {
     Person
     .findByIdAndRemove(request.params.id)
     .then(person => {
-      response.status(200).send("Käyttäjä poistettu.");
+      response.status(204).send("Käyttäjä poistettu.");
     })
     .catch(error => {
       console.log(error)
@@ -84,6 +84,25 @@ app.get('/info', (request, response) => {
     res.write(`puhelinluettelossa on ${persons.length} henkilön tiedot \n`)
     res.write(`${new Date()}`)
     res.end()
+})
+
+app.put('/api/persons', (request, response) => {
+  const body = request.body
+
+  const editedPerson = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person
+    .findOneAndUpdate(formatPerson(editedPerson), { new: true } )
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 const PORT = process.env.PORT || 3001
